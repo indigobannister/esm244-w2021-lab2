@@ -1,0 +1,55 @@
+---
+title: "ESM 244 - Lab Week 2"
+author: "Indigo Bannister"
+date: "1/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# for general data wrangling
+library(tidyverse)
+library(janitor)
+library(palmerpenguins)
+library(here)
+
+# for PCA
+library(ggfortify)
+
+# for ggplot customization
+library(readxl)
+library(gghighlight)
+library(lubridate)
+library(plotly)
+
+# for compound figures
+library(patchwork)
+```
+
+## Part 1: PCA with penguins
+
+```{r}
+penguin_pca <- penguins %>% 
+  select(body_mass_g, ends_with("_mm")) %>% 
+  drop_na() %>% 
+  scale() %>% 
+  prcomp()
+
+penguin_pca$rotation
+# can add $ after list to see what can call within list (eg "penguin_pca$")
+
+# Create another dataset that matches that used in pca to make plots more customizable
+penguin_complete <- penguins %>% 
+  drop_na(body_mass_g, ends_with("_mm"))
+
+# use autoplot to automatically plot biplot with pca dataset; can use all ggplot codes with autoplot (see Allisons code_key for more options)
+autoplot(penguin_pca, 
+         data = penguin_complete,
+         colour = 'species',
+         loadings = TRUE,
+         loadings.label = TRUE) + 
+  theme_minimal()
+  
+```
+
